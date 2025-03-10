@@ -10,6 +10,7 @@ It contains:
 
 ## Timings
 - 19:45 - 19:59: Read the README.md file
+- 20:00 - 20:02: Install the project and run it
 
 ## Reflections
 
