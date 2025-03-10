@@ -13,8 +13,10 @@ It contains:
 - 20:00 - 20:02: Install the project and run it
 - 20:03 - 20:08: Read the code in the front-end and the back-end
 - 20:09 - 20:22: Implement the search feature in the back-end and test it
-- 20:23 - 21:10: Implement the populate feature in the back-end. The test with mocked axios calls is not working because of jest setup.
-- 20:11 - 21:29: Start to answer the questions and fixing the populate test feature
+- 20:23 - 21:10: Implement the populate feature in the back-end. The test with mocked axios calls is not working yet.
+- 20:11 - 21:29: Start to answer the questions and fixing the populate test feature.
+- 21:30 - 21:40: Small pause.
+- 21:41 - 21:49: Finishing answering the questions.
 
 ## Reflections
 
@@ -56,14 +58,54 @@ To make this project production-ready, the following pieces are missing:
 - Implement input validation and sanitization to prevent SQL injection and other attacks.
 - Use HTTPS to encrypt data in transit (if not already implemented by load balancer or reverse proxy).
 - Implement authentication and authorization to secure the API endpoints.
+- Obviously, use a real database like PostgreSQL or MySQL instead of SQLite for production.
 - Analyze sequelize queries and add necessary indexes to improve performance.
 - Implement database migrations using a tool like `sequelize-cli`.
 - Write comprehensive integration tests using a testing framework like `mocha` and `chai`.
 - Set up continuous integration (CI) to run tests automatically on each commit.
 - Set up monitoring for the application and database using tools like `Prometheus` and `Grafana`.
 - Implement alerting to notify the team of any issues.
-- Use a deployment tool like Docker to containerize the application.
+- Use deployment tools like Docker & Docker Compose to containerize the application.
 - Set up a CI/CD pipeline to automate the deployment process.
 - Write comprehensive documentation for the API endpoints and the overall architecture.
 - Include setup and deployment instructions.
+
+### Action Plan:
+1. Error Handling and Logging:
+   - Use `express-validator` for input validation.
+   - Add error handling middleware in Express.
+   - Integrate tools like `winston` for logging.
+2. Testing:
+   - Write unit tests for all functions and routes that cover edge cases.
+   - Write integration tests for the API endpoints using `mocha` and `chai`.
+   - Set up a CI pipeline using GitHub Actions, `Dagger` or another CI tool.
+3. Containerization and CI/CD:
+   - Create Dockerfile & docker-compose.yml for containerization.
+   - Set up a CI/CD pipeline for automated deployments.
+4. Security:
+   - Implement JWT-based authentication and role-based authorization.
+   - Bonus: Implement OAuth2.0 for easier third-party authentication.
+5. Database Enhancement & Optimization:
+   - Modify the database layer to use a real database like PostgreSQL or MySQL.
+   - Remove fixtures ingestion.
+   - Use `sequelize-cli` for database migrations.
+   - Add necessary indexes to the database to improve `Search Game` query performance.
+6. Monitoring and Alerting:
+   - Configure alerting using tools like `Sentry`, `DataDog` or `PagerDuty`.
+   - Bonus: Integrate `Prometheus` for monitoring and use `Grafana` for visualization.
+7. Documentation:
+   - Write API documentation using tools like `Swagger`, allowing for easy API exploration and automated testing with tools like `Postman`.
+   - Document the setup, deployment, and architecture for new developers.
+
+### Question 2:
+To automate the ingestion of new files from the S3 bucket every day, the following solution can be implemented:
+
+1. Scheduled Job:
+   - Use a task scheduler like `cron` or `node-cron` to run a job every day.
+   - The job will call the `/api/games/populate` endpoint or internal function call to ingest the new files.
+2. AWS Lambda Function:
+   - Use AWS Lambda to create a serverless function. It could be triggered by:
+      * A CloudWatch Events rule to trigger the function daily.
+      * S3 Event Notifications to trigger the function when a new file is uploaded.
+   - The Lambda function will call the `/api/games/populate` endpoint.
 
