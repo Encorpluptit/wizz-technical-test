@@ -1,6 +1,7 @@
 const request = require('supertest');
 var assert = require('assert');
 const app = require('../index');
+const MockAdapter = require('axios-mock-adapter');
 
 /**
  * Testing create game endpoint
@@ -278,3 +279,45 @@ describe('POST /api/games/search', () => {
     });
 });
 
+
+// Could not setup jest globals for beforeAll, afterAll, afterEach
+// Therefore, commenting out the test cases for now
+// describe('POST /api/games/populate', () => {
+//     let mock;
+//
+//     beforeAll(() => {
+//         mock = new MockAdapter(axios);
+//     });
+//
+//     afterEach(() => {
+//         mock.reset();
+//     });
+//
+//     afterAll(() => {
+//         mock.restore();
+//     });
+//
+//     it('should populate the database with top 100 games from App Store and Google Play Store', async (done) => {
+//         const iosTopGames = [
+//             { publisher_id: '1', name: 'Game 1', os: 'ios', bundle_id: 'com.example.game1', version: '1.0' },
+//             { publisher_id: '2', name: 'Game 2', os: 'ios', bundle_id: 'com.example.game2', version: '1.0' }
+//         ];
+//         const androidTopGames = [
+//             { publisher_id: '3', name: 'Game 3', os: 'android', bundle_id: 'com.example.game3', version: '1.0' },
+//             { publisher_id: '4', name: 'Game 4', os: 'android', bundle_id: 'com.example.game4', version: '1.0' }
+//         ];
+//
+//         mock.onGet('https://interview-marketing-eng-dev.s3.eu-west-1.amazonaws.com/ios.top100.json').reply(200, iosTopGames);
+//         mock.onGet('https://interview-marketing-eng-dev.s3.eu-west-1.amazonaws.com/android.top100.json').reply(200, androidTopGames);
+//
+//         request(app)
+//             .post('/api/games/search')
+//             .send({name: ''})
+//             .set('Accept', 'application/json')
+//             .expect('Content-Type', /json/)
+//             .expect(200)
+//             .end((err, result) => {
+//                 done();
+//             });
+//     });
+// });

@@ -1,8 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./models');
+const axios = require('axios');
 
 const app = express();
+const iosTopUrl = process.env.IOS_TOP_URL || 'https://interview-marketing-eng-dev.s3.eu-west-1.amazonaws.com/ios.top100.json';
+const androidTopUrl = process.env.ANDROID_TOP_URL || 'https://interview-marketing-eng-dev.s3.eu-west-1.amazonaws.com/android.top100.json';
 
 app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/static`));
@@ -55,6 +58,7 @@ app.put('/api/games/:id', (req, res) => {
  * Search for games by name and platform
  * @param {string} name - (in body) The name of the game to search for
  * @param {string} platform - (in body) The platform to search for
+ * @returns {Promise} - A promise that resolves with the games that match the search criteria or rejects with an error
  */
 app.post('/api/games/search', (req, res) => {
     const {name, platform} = req.body;
@@ -80,6 +84,45 @@ app.post('/api/games/search', (req, res) => {
             console.log('***There was an error querying games', JSON.stringify(err));
             return res.status(500).send(err);
         });
+});
+
+/**
+ * Populate the database with the top 100 games from the App Store and Google Play Store
+ * @returns {Promise} - A promise that resolves when the database is populated or rejects with an error
+ */
+app.post('/api/games/populate', async (req, res) => {
+    const iosTopGames = await axios.get(iosTopUrl).then(response => response.data).catch(
+        err => {
+            console.error('***There was an error populating the database with ios games', JSON.stringify(err));
+            return res.status(500).send(err);
+        }
+    )
+    const androidTopGames = await axios.get(androidTopUrl).then(response => response.data).catch(
+        err => {
+            console.error('***There was an error populating the database with android games', JSON.stringify(err));
+            return res.status(500).send(err);
+        }
+    )
+
+    // flatten the array of arrays of games
+    const flattenedGames = [...iosTopGames, ...androidTopGames].reduce((acc, val) => acc.concat(val), []);
+
+    // bulk create the games in the database and return a success message or an error
+    return await db.Game.bulkCreate(flattenedGames.map(game => ({
+        publisherId: game.publisher_id,
+        // some names contain special characters, we could sanitize them before saving to the database
+        name: game.name,
+        platform: game.os,
+        storeId: game.bundle_id, // defaulting to bundle_id as store_id is not provided in either dataset
+        bundleId: game.bundle_id,
+        appVersion: game.version,
+        isPublished: true
+    }))).then(
+        () => res.status(200).send({message: 'Database populated with top 100 games from App Store and Google Play Store'})
+    ).catch(err => {
+        console.log('***There was an error populating the database', JSON.stringify(err));
+        res.status(500).send(err);
+    });
 });
 
 

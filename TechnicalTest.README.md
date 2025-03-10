@@ -13,6 +13,7 @@ It contains:
 - 20:00 - 20:02: Install the project and run it
 - 20:03 - 20:08: Read the code in the front-end and the back-end
 - 20:09 - 20:22: Implement the search feature in the back-end and test it
+- 20:23 - 21:10: Implement the populate feature in the back-end. The test with mocked axios calls is not working because of jest setup.
 
 ## Reflections
 
