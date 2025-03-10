@@ -14,6 +14,7 @@ It contains:
 - 20:03 - 20:08: Read the code in the front-end and the back-end
 - 20:09 - 20:22: Implement the search feature in the back-end and test it
 - 20:23 - 21:10: Implement the populate feature in the back-end. The test with mocked axios calls is not working because of jest setup.
+- 20:11 - 21:29: Start to answer the questions and fixing the populate test feature
 
 ## Reflections
 
@@ -44,4 +45,25 @@ Nonetheless, we should use a defaulted env variable to store the URL.
 #### Should we bulk insert the data or insert one by one ?
 I think we should bulk insert the data. It will be faster, and we don't need to worry about the order of the data.
 We will assume that the data is not present in the database and that we can insert it without any problem.
+
+
+## Answers
+### Question 1:
+To make this project production-ready, the following pieces are missing:
+
+- Remove model logic from the routes and create a service layer to handle business logic and database calls.
+- Implement comprehensive error handling to catch and log all possible errors, using a logging library like `winston` to log errors and important events.
+- Implement input validation and sanitization to prevent SQL injection and other attacks.
+- Use HTTPS to encrypt data in transit (if not already implemented by load balancer or reverse proxy).
+- Implement authentication and authorization to secure the API endpoints.
+- Analyze sequelize queries and add necessary indexes to improve performance.
+- Implement database migrations using a tool like `sequelize-cli`.
+- Write comprehensive integration tests using a testing framework like `mocha` and `chai`.
+- Set up continuous integration (CI) to run tests automatically on each commit.
+- Set up monitoring for the application and database using tools like `Prometheus` and `Grafana`.
+- Implement alerting to notify the team of any issues.
+- Use a deployment tool like Docker to containerize the application.
+- Set up a CI/CD pipeline to automate the deployment process.
+- Write comprehensive documentation for the API endpoints and the overall architecture.
+- Include setup and deployment instructions.
 
