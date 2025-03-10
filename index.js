@@ -51,6 +51,37 @@ app.put('/api/games/:id', (req, res) => {
     });
 });
 
+/**
+ * Search for games by name and platform
+ * @param {string} name - (in body) The name of the game to search for
+ * @param {string} platform - (in body) The platform to search for
+ */
+app.post('/api/games/search', (req, res) => {
+    const {name, platform} = req.body;
+    const whereClause = {};
+
+    // if name is not provided, we want to return all games
+    if (name) {
+        // Use the Sequelize.Op.like operator to search for partial matches
+        whereClause.name = {[db.Sequelize.Op.like]: `%${name}%`};
+    }
+
+    // if platform is provided, add it to the whereClause object to filter the query in lowercase
+    // for more flexibility in the search, we could use whereClause.platform = {[db.Sequelize.Op.like]: `${platform}`};
+    if (platform) {
+        whereClause.platform = platform.toLowerCase();
+        platform.toLowerCase();
+    }
+
+    // Run the query and return the results. If there is an error, log it and return the error
+    return db.Game.findAll({where: whereClause})
+        .then(games => res.send(games))
+        .catch((err) => {
+            console.log('***There was an error querying games', JSON.stringify(err));
+            return res.status(500).send(err);
+        });
+});
+
 
 app.listen(3000, () => {
   console.log('Server is up on port 3000');

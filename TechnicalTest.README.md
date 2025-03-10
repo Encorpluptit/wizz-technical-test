@@ -12,6 +12,7 @@ It contains:
 - 19:45 - 19:59: Read the README.md file
 - 20:00 - 20:02: Install the project and run it
 - 20:03 - 20:08: Read the code in the front-end and the back-end
+- 20:09 - 20:22: Implement the search feature in the back-end and test it
 
 ## Reflections
 
@@ -19,6 +20,11 @@ It contains:
 
 #### Should we validate arguments (type and validity) ?
 I don't think so as the environment is controlled. The front-end team has already created the UI and the API is already in place. The only thing to do is to implement the expected interface.
+
+```
+It seems that no validation is performed in other routes, so we'll keep it simple.
+We could have used a library like `express-validator` to validate the input.
+```
 
 #### How is the search supposed to work when no platform is specified ?
 If no search has been specified, then the results should include everything (just like it does now).
@@ -36,5 +42,5 @@ Nonetheless, we should use a defaulted env variable to store the URL.
 
 #### Should we bulk insert the data or insert one by one ?
 I think we should bulk insert the data. It will be faster, and we don't need to worry about the order of the data.
-We should assume that the data is not present in the database and that we can insert it without any problem.
+We will assume that the data is not present in the database and that we can insert it without any problem.
 

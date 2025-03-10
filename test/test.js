@@ -131,3 +131,150 @@ describe('GET /api/games', function () {
     });
 });
 
+/**
+ * Testing search games endpoint
+ */
+describe('POST /api/games/search', () => {
+    it('Create ios game', (done) => {
+        request(app)
+            .post('/api/games')
+            .send({
+                publisherId: '1234567890',
+                name: 'Test App 2',
+                platform: 'ios',
+                storeId: '1234',
+                bundleId: 'test.bundle.id',
+                appVersion: '1.0.0',
+                isPublished: true,
+            })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(done);
+    });
+    it('Create android game', (done) => {
+        request(app)
+            .post('/api/games')
+            .send({
+                publisherId: '1234567890',
+                name: 'Test App 2',
+                platform: 'android',
+                storeId: '1234',
+                bundleId: 'test.bundle.id',
+                appVersion: '1.0.0',
+                isPublished: true,
+            })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(done);
+    });
+    it('should return games matching the name', (done) => {
+        request(app)
+            .post('/api/games/search')
+            .send({name: 'Test App'})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, result) => {
+                if (err) return done(err);
+                assert(result.body.length > 0);
+                result.body.forEach((game) => {
+                    assert.strictEqual(game.name, 'Test App 2');
+                });
+                done();
+            });
+    });
+    it('should return games matching the name in lowercase', (done) => {
+        request(app)
+            .post('/api/games/search')
+            .send({name: 'test app'})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, result) => {
+                if (err) return done(err);
+                assert(result.body.length > 0);
+                result.body.forEach((game) => {
+                    assert.strictEqual(game.name, 'Test App 2');
+                });
+                done();
+            });
+    });
+    it('should return games matching the platform', (done) => {
+        request(app)
+            .post('/api/games/search')
+            .send({platform: 'ios'})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, result) => {
+                if (err) return done(err);
+                assert(result.body.length > 0);
+                result.body.forEach((game) => {
+                    assert.strictEqual(game.platform, 'ios');
+                });
+                done();
+            });
+    });
+    it('should return games matching the platform in uppercase', (done) => {
+        request(app)
+            .post('/api/games/search')
+            .send({platform: 'IOS'})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, result) => {
+                if (err) return done(err);
+                assert(result.body.length > 0);
+                result.body.forEach((game) => {
+                    assert.strictEqual(game.platform, 'ios');
+                });
+                done();
+            });
+    });
+    it('should return games matching both name and platform', (done) => {
+        request(app)
+            .post('/api/games/search')
+            .send({name: 'Test App', platform: 'ios'})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, result) => {
+                if (err) return done(err);
+                assert(result.body.length > 0);
+                result.body.forEach((game) => {
+                    assert.strictEqual(game.name, 'Test App 2');
+                    assert.strictEqual(game.platform, 'ios');
+                });
+                done();
+            });
+    });
+    it('should return all games if no name is provided', (done) => {
+        request(app)
+            .post('/api/games/search')
+            .send({name: '', platform: ''})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, result) => {
+                if (err) return done(err);
+                assert(result.body.length > 0);
+                done();
+            });
+    });
+    it('should return all games if no search criteria is provided', (done) => {
+        request(app)
+            .post('/api/games/search')
+            .send({name: ''})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, result) => {
+                if (err) return done(err);
+                assert(result.body.length === 2);
+                done();
+            });
+    });
+});
+
