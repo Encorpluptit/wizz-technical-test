@@ -11,6 +11,7 @@ It contains:
 ## Timings
 - 19:45 - 19:59: Read the README.md file
 - 20:00 - 20:02: Install the project and run it
+- 20:03 - 20:08: Read the code in the front-end and the back-end
 
 ## Reflections
 
@@ -22,6 +23,10 @@ I don't think so as the environment is controlled. The front-end team has alread
 #### How is the search supposed to work when no platform is specified ?
 If no search has been specified, then the results should include everything (just like it does now).
 But is the argument supposed to be an undefined, an empty string or a list of all the platforms ?
+
+```
+After reading the code in the front-end, I see that the platform is a string and that it could be empty when 'All' option is selected. So, if the platform is an empty string, we should return all the games.
+```
 
 ### Feature 2
 #### The S3 URL point to the s3 path. Should we use AWS SDK to download the files ?
